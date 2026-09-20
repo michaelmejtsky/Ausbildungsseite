@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Ausbildungsplaner – Feuerwehr St. Pölten-Stadt</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f3f5f9;
+      color: #192230;
+    }
+
+    body {
+      overflow: hidden;
+    }
+
+    /* =========================================================
+       LOGIN
+       ========================================================= */
+
+    #loginScreen {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      padding: 24px;
+
+      background:
+        radial-gradient(circle at top right, rgba(255,255,255,.14), transparent 30%),
+        linear-gradient(135deg, #25346f, #34499a);
+    }
+
+    .login-card {
+      width: min(460px, 100%);
+      background: white;
+      border-radius: 24px;
+      padding: 34px 30px 30px;
+
+      box-shadow:
+        0 30px 80px rgba(0,0,0,.28);
+
+      text-align: center;
+    }
+
+    .badge {
+      width: 72px;
+      height: 72px;
+
+      margin: 0 auto 18px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 20px;
+
+      background: #e9edf8;
+      color: #34499a;
+
+      font-size: 34px;
+    }
+
+    .small-title {
+      font-size: 11px;
+      font-weight: 800;
+      color: #748094;
+      letter-spacing: .10em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 8px 0 8px;
+      font-size: 27px;
+      line-height: 1.15;
+      color: #25346f;
+    }
+
+    .subtitle {
+      margin-bottom: 26px;
+      color: #748094;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .field-label {
+      display: block;
+      margin-bottom: 7px;
+
+      text-align: left;
+
+      font-size: 11px;
+      font-weight: 800;
+      color: #637088;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    #passwordInput {
+      width: 100%;
+      height: 50px;
+
+      padding: 0 14px;
+
+      border: 1px solid #dce2ec;
+      border-radius: 12px;
+
+      outline: none;
+      background: #f9faff;
+
+      font-size: 16px;
+
+      transition: .2s;
+    }
+
+    #passwordInput:focus {
+      border-color: #34499a;
+      box-shadow: 0 0 0 4px rgba(52,73,154,.10);
+    }
+
+    #loginButton {
+      width: 100%;
+
+      margin-top: 12px;
+      padding: 14px;
+
+      border: 0;
+      border-radius: 12px;
+
+      background: #34499a;
+      color: white;
+
+      font-size: 15px;
+      font-weight: 800;
+
+      cursor: pointer;
+
+      transition: .2s;
+    }
+
+    #loginButton:hover {
+      background: #293b83;
+      transform: translateY(-1px);
+    }
+
+    #loginButton:disabled {
+      opacity: .6;
+      cursor: wait;
+    }
+
+    #errorMessage {
+      min-height: 20px;
+      margin-top: 12px;
+
+      color: #b42318;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .footer-note {
+      margin-top: 24px;
+      color: #9aa3b1;
+      font-size: 11px;
+    }
+
+    /* =========================================================
+       APP
+       ========================================================= */
+
+    #app {
+      position: fixed;
+      inset: 0;
+      display: none;
+      background: #f3f5f9;
+    }
+
+    #plannerFrame {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+      background: #f3f5f9;
+    }
+
+    #loading {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 14px;
+
+      background: #34499a;
+      color: white;
+
+      font-weight: 800;
+    }
+
+    .spinner {
+      width: 38px;
+      height: 38px;
+
+      border: 4px solid rgba(255,255,255,.25);
+      border-top-color: white;
+      border-radius: 50%;
+
+      animation: spin .8s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .login-card {
+        padding: 28px 20px;
+        border-radius: 20px;
+      }
+
+      h1 {
+        font-size: 23px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- =======================================================
+       LOGIN
+       ======================================================= -->
+
+  <div id="loginScreen">
+
+    <div class="login-card">
+
+      <div class="badge">
+        🎓
+      </div>
+
+      <div class="small-title">
+        Feuerwehr St. Pölten-Stadt
+      </div>
+
+      <h1>
+        Willkommen auf der Ausbildungsplaner-Plattform
+      </h1>
+
+      <div class="subtitle">
+        Ausbildungsplanung, aktuelle Übungen,
+        Themenideen und Infoscreen-Freigaben an einem Ort.
+      </div>
+
+      <label
+        class="field-label"
+        for="passwordInput"
+      >
+        Zugangscode
+      </label>
+
+      <input
+        id="passwordInput"
+        type="password"
+        autocomplete="current-password"
+        placeholder="Code eingeben"
+      >
+
+      <button
+        id="loginButton"
+        type="button"
+        onclick="login()"
+      >
+        Plattform öffnen
+      </button>
+
+      <div id="errorMessage"></div>
+
+      <div class="footer-note">
+        Interne Ausbildungsplanung
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- =======================================================
+       PLANER
+       ======================================================= -->
+
+  <div id="app">
+
+    <iframe
+      id="plannerFrame"
+      allowfullscreen
+    ></iframe>
+
+  </div>
+
+
+  <div id="loading">
+
+    <div class="spinner"></div>
+
+    <div>
+      Ausbildungsplaner wird geladen …
+    </div>
+
+  </div>
+
+
+  <script>
+
+    /* =======================================================
+       KONFIGURATION
+       ======================================================= */
+
+    const PLANNER_URL =
+      'https://script.google.com/macros/s/AKfycbyAbgkQBR514pZ1kXxEnNyCpWKHM2opbnV4Y0-MPJjr4eYW6mAWY9H0SSIGUpj0FXukXg/exec?view=planner';
+
+
+    /*
+     * SHA-256 von:
+     *
+     * flomichi
+     *
+     * Der Code steht dadurch nicht direkt im Klartext
+     * im HTML.
+     */
+
+    const PASSWORD_HASH =
+      '87a2fd6ff108437f3982e641a127158f77ce579f2b0f4ef8c07346c3ce3c4191';
+
+
+    const SESSION_KEY =
+      'ffstp_ausbildungsplaner_login';
+
+
+    /* =======================================================
+       START
+       ======================================================= */
+
+    document.addEventListener(
+      'DOMContentLoaded',
+      () => {
+
+        const input =
+          document.getElementById(
+            'passwordInput'
+          );
+
+
+        input.addEventListener(
+          'keydown',
+          event => {
+
+            if (
+              event.key === 'Enter'
+            ) {
+
+              login();
+
+            }
+
+          }
+        );
+
+
+        /*
+         * Bleibt während dieser Browser-Sitzung angemeldet.
+         */
+
+        if (
+          sessionStorage.getItem(
+            SESSION_KEY
+          ) === 'OK'
+        ) {
+
+          openPlanner();
+
+        } else {
+
+          setTimeout(
+            () => input.focus(),
+            100
+          );
+
+        }
+
+      }
+    );
+
+
+    /* =======================================================
+       LOGIN
+       ======================================================= */
+
+    async function login() {
+
+      const input =
+        document.getElementById(
+          'passwordInput'
+        );
+
+
+      const button =
+        document.getElementById(
+          'loginButton'
+        );
+
+
+      const error =
+        document.getElementById(
+          'errorMessage'
+        );
+
+
+      const password =
+        input.value;
+
+
+      error.textContent =
+        '';
+
+
+      if (
+        !password
+      ) {
+
+        error.textContent =
+          'Bitte Zugangscode eingeben.';
+
+        input.focus();
+
+        return;
+
+      }
+
+
+      button.disabled =
+        true;
+
+
+      try {
+
+        const hash =
+          await sha256(
+            password
+          );
+
+
+        if (
+          hash ===
+          PASSWORD_HASH
+        ) {
+
+          sessionStorage.setItem(
+            SESSION_KEY,
+            'OK'
+          );
+
+
+          openPlanner();
+
+        } else {
+
+          error.textContent =
+            'Zugangscode nicht korrekt.';
+
+          input.value =
+            '';
+
+          input.focus();
+
+        }
+
+      } catch (
+        err
+      ) {
+
+        error.textContent =
+          'Anmeldung konnte nicht geprüft werden.';
+
+      } finally {
+
+        button.disabled =
+          false;
+
+      }
+
+    }
+
+
+    /* =======================================================
+       PLANER ÖFFNEN
+       ======================================================= */
+
+    function openPlanner() {
+
+      const loginScreen =
+        document.getElementById(
+          'loginScreen'
+        );
+
+
+      const app =
+        document.getElementById(
+          'app'
+        );
+
+
+      const loading =
+        document.getElementById(
+          'loading'
+        );
+
+
+      const frame =
+        document.getElementById(
+          'plannerFrame'
+        );
+
+
+      loginScreen.style.display =
+        'none';
+
+
+      loading.style.display =
+        'flex';
+
+
+      app.style.display =
+        'block';
+
+
+      frame.onload =
+        () => {
+
+          loading.style.display =
+            'none';
+
+        };
+
+
+      /*
+       * Cache-Buster sorgt dafür,
+       * dass die aktuelle Version geladen wird.
+       */
+
+      const separator =
+        PLANNER_URL.includes('?')
+          ? '&'
+          : '?';
+
+
+      frame.src =
+        PLANNER_URL +
+        separator +
+        't=' +
+        Date.now();
+
+    }
+
+
+    /* =======================================================
+       SHA-256
+       ======================================================= */
+
+    async function sha256(
+      text
+    ) {
+
+      const data =
+        new TextEncoder()
+          .encode(
+            text
+          );
+
+
+      const hashBuffer =
+        await crypto.subtle.digest(
+          'SHA-256',
+          data
+        );
+
+
+      return Array
+        .from(
+          new Uint8Array(
+            hashBuffer
+          )
+        )
+        .map(
+          byte =>
+            byte
+              .toString(
+                16
+              )
+              .padStart(
+                2,
+                '0'
+              )
+        )
+        .join(
+          ''
+        );
+
+    }
+
+  </script>
+
+</body>
+</html>
