@@ -5,10 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <meta name="theme-color" content="#25346f">
+  <meta name="application-name" content="Ausbildungsplanung">
   <meta name="apple-mobile-web-app-title" content="Ausbildungsplanung">
-  <link rel="icon" type="image/png" sizes="512x512" href="./app-icon.png?v=20260922">
-  <link rel="shortcut icon" type="image/png" href="./app-icon.png?v=20260922">
-  <link rel="apple-touch-icon" sizes="180x180" href="./app-icon.png?v=20260922">
+  <meta property="og:title" content="Ausbildungsplanung – Feuerwehr St. Pölten-Stadt">
+  <meta property="og:description" content="Interne Ausbildungsplanung der Feuerwehr St. Pölten-Stadt">
+
+  <link rel="icon" type="image/png" sizes="512x512" href="./ausbildungs-icon-20260922.png?v=3">
+  <link rel="shortcut icon" type="image/png" href="./ausbildungs-icon-20260922.png?v=3">
+  <link rel="apple-touch-icon" sizes="180x180" href="./ausbildungs-icon-20260922.png?v=3">
 
   <title>Ausbildungsplaner – Feuerwehr St. Pölten-Stadt</title>
 
@@ -268,9 +272,7 @@
 
     <div class="login-card">
 
-      <div class="badge">
-        <img src="./app-icon.png?v=20260922" alt="Wappen Feuerwehr St. Pölten-Stadt">
-      </div>
+      <div class="badge"><img src="./ausbildungs-icon-20260922.png?v=3" alt="Wappen Feuerwehr St. Pölten-Stadt"></div>
 
       <div class="small-title">
         Feuerwehr St. Pölten-Stadt
@@ -343,7 +345,29 @@
   </div>
 
 
-  <script>
+  
+  <script id="legacy-vb-cleanup">
+    (function () {
+      try {
+        const here = new URL('.', location.href).pathname;
+
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistrations().then(function (regs) {
+            regs.forEach(function (reg) {
+              try {
+                const scopePath = new URL(reg.scope).pathname;
+                if (scopePath === here) {
+                  reg.unregister();
+                }
+              } catch (_) {}
+            });
+          });
+        }
+      } catch (_) {}
+    })();
+  </script>
+
+<script>
 
     /* =======================================================
        KONFIGURATION
