@@ -7,12 +7,15 @@
   <meta name="theme-color" content="#25346f">
   <meta name="application-name" content="Ausbildungsplanung">
   <meta name="apple-mobile-web-app-title" content="Ausbildungsplanung">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta property="og:title" content="Ausbildungsplanung – Feuerwehr St. Pölten-Stadt">
   <meta property="og:description" content="Interne Ausbildungsplanung der Feuerwehr St. Pölten-Stadt">
 
-  <link rel="icon" type="image/png" sizes="512x512" href="./ausbildungs-icon-20260922.png?v=3">
-  <link rel="shortcut icon" type="image/png" href="./ausbildungs-icon-20260922.png?v=3">
-  <link rel="apple-touch-icon" sizes="180x180" href="./ausbildungs-icon-20260922.png?v=3">
+  <link rel="icon" type="image/png" sizes="512x512" href="./ausbildungs-icon-20260922.png?v=4">
+  <link rel="shortcut icon" type="image/png" href="./ausbildungs-icon-20260922.png?v=4">
+  <link rel="apple-touch-icon" sizes="180x180" href="./ausbildungs-icon-20260922.png?v=4">
+  <link rel="manifest" href="./manifest.json">
 
   <title>Ausbildungsplaner – Feuerwehr St. Pölten-Stadt</title>
 
@@ -259,6 +262,126 @@
         font-size: 23px;
       }
     }
+
+    /* =========================================================
+       PWA INSTALLATION
+       ========================================================= */
+
+    #installOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 99999;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(15,22,42,.72);
+      backdrop-filter: blur(7px);
+      -webkit-backdrop-filter: blur(7px);
+    }
+
+    #installOverlay.show {
+      display: flex;
+    }
+
+    .install-card {
+      width: min(450px, 100%);
+      padding: 26px 21px;
+      margin-bottom: env(safe-area-inset-bottom);
+      border-radius: 25px;
+      background: #fff;
+      text-align: center;
+      box-shadow: 0 25px 80px rgba(0,0,0,.32);
+    }
+
+    .install-icon {
+      width: 82px;
+      height: 82px;
+      margin: 0 auto 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 22px;
+      background: #fff;
+      border: 1px solid #e4e8f0;
+      box-shadow: 0 8px 22px rgba(38,54,111,.10);
+    }
+
+    .install-icon img {
+      width: 72px;
+      height: 72px;
+      object-fit: contain;
+      border-radius: 18px;
+    }
+
+    .install-brand {
+      color: #34499a;
+      font-size: 9px;
+      font-weight: 900;
+      letter-spacing: .08em;
+    }
+
+    .install-card h2 {
+      margin: 7px 0 8px;
+      color: #25346f;
+      font-size: 23px;
+      font-weight: 900;
+    }
+
+    .install-card p {
+      margin: 8px 0 0;
+      color: #718096;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .install-button {
+      width: 100%;
+      min-height: 54px;
+      margin-top: 20px;
+      border: 0;
+      border-radius: 14px;
+      background: linear-gradient(135deg,#25346f,#34499a);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .install-later {
+      width: 100%;
+      min-height: 48px;
+      margin-top: 9px;
+      border: 0;
+      border-radius: 14px;
+      background: #edf0f5;
+      color: #354052;
+      font-size: 12px;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    #iosHelp {
+      display: none;
+      margin-top: 16px;
+      padding: 17px;
+      border-radius: 15px;
+      background: #eef1fb;
+      color: #25346f;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .browser-help {
+      margin-top: 15px;
+      padding: 15px;
+      border-radius: 15px;
+      background: #eef1fb;
+      color: #25346f;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
   </style>
 </head>
 
@@ -272,7 +395,7 @@
 
     <div class="login-card">
 
-      <div class="badge"><img src="./ausbildungs-icon-20260922.png?v=3" alt="Wappen Feuerwehr St. Pölten-Stadt"></div>
+      <div class="badge"><img src="./ausbildungs-icon-20260922.png?v=4" alt="Wappen Feuerwehr St. Pölten-Stadt"></div>
 
       <div class="small-title">
         Feuerwehr St. Pölten-Stadt
@@ -345,29 +468,63 @@
   </div>
 
 
-  
-  <script id="legacy-vb-cleanup">
-    (function () {
-      try {
-        const here = new URL('.', location.href).pathname;
+  <!-- =======================================================
+       PWA INSTALLATION
+       ======================================================= -->
 
-        if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.getRegistrations().then(function (regs) {
-            regs.forEach(function (reg) {
-              try {
-                const scopePath = new URL(reg.scope).pathname;
-                if (scopePath === here) {
-                  reg.unregister();
-                }
-              } catch (_) {}
-            });
-          });
-        }
-      } catch (_) {}
-    })();
-  </script>
+  <div id="installOverlay">
+    <div class="install-card">
 
-<script>
+      <div class="install-icon">
+        <img
+          src="./ausbildungs-icon-20260922.png?v=4"
+          alt="Ausbildungsplaner"
+        >
+      </div>
+
+      <div class="install-brand">
+        FEUERWEHR ST. PÖLTEN-STADT
+      </div>
+
+      <h2>Ausbildungsplaner installieren</h2>
+
+      <p id="installText">
+        Der Ausbildungsplaner kann als App auf diesem Gerät installiert werden.
+      </p>
+
+      <div id="iosHelp">
+        <strong>iPhone / iPad</strong>
+        <br><br>
+        Tippe in Safari auf
+        <br><br>
+        <strong>Teilen ⬆️</strong>
+        <br><br>
+        und anschließend auf
+        <br>
+        <strong>„Zum Home-Bildschirm“</strong>
+      </div>
+
+      <button
+        id="installButton"
+        class="install-button"
+        type="button"
+        style="display:none;"
+      >
+        📲 App installieren
+      </button>
+
+      <button
+        id="installLater"
+        class="install-later"
+        type="button"
+      >
+        Jetzt nicht
+      </button>
+
+    </div>
+  </div>
+
+  <script>
 
     /* =======================================================
        KONFIGURATION
@@ -665,6 +822,244 @@
 
     }
 
+  </script>
+
+
+  <script>
+    /* =======================================================
+       PWA INSTALLATION
+       ======================================================= */
+
+    let deferredInstallPrompt = null;
+
+    const installParams =
+      new URLSearchParams(window.location.search);
+
+    const installRequested =
+      installParams.get('install') === '1';
+
+    const installOverlay =
+      document.getElementById('installOverlay');
+
+    const installButton =
+      document.getElementById('installButton');
+
+    const installLater =
+      document.getElementById('installLater');
+
+    const installText =
+      document.getElementById('installText');
+
+    const iosHelp =
+      document.getElementById('iosHelp');
+
+
+    function isPwaInstalled() {
+      return (
+        window.matchMedia('(display-mode: standalone)').matches ||
+        window.navigator.standalone === true
+      );
+    }
+
+
+    function cleanInstallUrl() {
+      const url = new URL(window.location.href);
+
+      url.searchParams.delete('install');
+      url.searchParams.delete('source');
+
+      history.replaceState(
+        {},
+        '',
+        url.pathname + url.search + url.hash
+      );
+    }
+
+
+    function showAndroidInstall() {
+      if (isPwaInstalled()) {
+        cleanInstallUrl();
+        return;
+      }
+
+      iosHelp.style.display = 'none';
+      installButton.style.display = 'block';
+
+      installText.innerHTML =
+        'Der Ausbildungsplaner kann als App auf diesem Gerät installiert werden.';
+
+      installOverlay.classList.add('show');
+    }
+
+
+    function showIosInstall() {
+      installButton.style.display = 'none';
+      iosHelp.style.display = 'block';
+
+      installText.innerHTML =
+        'Installiere den Ausbildungsplaner auf deinem Home-Bildschirm.';
+
+      installOverlay.classList.add('show');
+    }
+
+
+    function showBrowserFallback() {
+      installButton.style.display = 'none';
+      iosHelp.style.display = 'none';
+
+      installText.innerHTML = `
+        <b>Ausbildungsplaner wurde geöffnet.</b>
+
+        <div class="browser-help">
+          Falls dein Browser keinen Installationsdialog anzeigt:
+          <br><br>
+          <b>☰ Browser-Menü</b>
+          <br>
+          → <b>Seite hinzufügen zu</b>
+          <br>
+          → <b>Startbildschirm</b>
+        </div>
+      `;
+
+      installOverlay.classList.add('show');
+    }
+
+
+    window.addEventListener(
+      'beforeinstallprompt',
+      function(event) {
+        event.preventDefault();
+        deferredInstallPrompt = event;
+
+        console.log(
+          'Ausbildungsplaner: Installation verfügbar'
+        );
+
+        if (
+          installRequested &&
+          !isPwaInstalled()
+        ) {
+          showAndroidInstall();
+        }
+      }
+    );
+
+
+    installButton.addEventListener(
+      'click',
+      async function() {
+        if (!deferredInstallPrompt) {
+          showBrowserFallback();
+          return;
+        }
+
+        deferredInstallPrompt.prompt();
+
+        const result =
+          await deferredInstallPrompt.userChoice;
+
+        console.log(
+          'Ausbildungsplaner Installation:',
+          result.outcome
+        );
+
+        deferredInstallPrompt = null;
+
+        installOverlay.classList.remove('show');
+
+        cleanInstallUrl();
+      }
+    );
+
+
+    installLater.addEventListener(
+      'click',
+      function() {
+        installOverlay.classList.remove('show');
+        cleanInstallUrl();
+      }
+    );
+
+
+    window.addEventListener(
+      'appinstalled',
+      function() {
+        deferredInstallPrompt = null;
+        installOverlay.classList.remove('show');
+        cleanInstallUrl();
+
+        console.log(
+          'Ausbildungsplaner wurde installiert'
+        );
+      }
+    );
+
+
+    window.addEventListener(
+      'load',
+      function() {
+        if (!installRequested) {
+          return;
+        }
+
+        if (isPwaInstalled()) {
+          cleanInstallUrl();
+          return;
+        }
+
+        const ua = navigator.userAgent;
+
+        const ios =
+          /iPhone|iPad|iPod/i.test(ua) ||
+          (
+            navigator.platform === 'MacIntel' &&
+            navigator.maxTouchPoints > 1
+          );
+
+        if (ios) {
+          setTimeout(showIosInstall, 600);
+          return;
+        }
+
+        setTimeout(
+          function() {
+            if (deferredInstallPrompt) {
+              showAndroidInstall();
+            } else {
+              showBrowserFallback();
+            }
+          },
+          5000
+        );
+      }
+    );
+
+
+    /* =======================================================
+       SERVICE WORKER
+       ======================================================= */
+
+    if ('serviceWorker' in navigator) {
+      window.addEventListener(
+        'load',
+        function() {
+          navigator.serviceWorker
+            .register('./sw.js')
+            .then(function(registration) {
+              console.log(
+                'Ausbildungsplaner Service Worker aktiv:',
+                registration.scope
+              );
+            })
+            .catch(function(error) {
+              console.error(
+                'Service Worker Fehler:',
+                error
+              );
+            });
+        }
+      );
+    }
   </script>
 
 </body>
