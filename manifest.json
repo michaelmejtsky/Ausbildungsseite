@@ -1,0 +1,25 @@
+{
+  "id": "./",
+  "name": "Ausbildungsplaner – Feuerwehr St. Pölten",
+  "short_name": "Ausbildungsplaner",
+  "description": "Interne Ausbildungsplanung der Feuerwehr St. Pölten-Stadt",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f3f5f9",
+  "theme_color": "#25346f",
+  "icons": [
+    {
+      "src": "./ausbildungs-icon-20260922.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./ausbildungs-icon-20260922.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
