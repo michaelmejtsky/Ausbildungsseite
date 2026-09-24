@@ -1,27 +1,56 @@
-/* Ausbildungsapp cleanup worker – entfernt alte VB/PWA-Caches dieser Site */
+const CACHE_NAME = 'ausbildungsplaner-v1';
+
+const CACHE_FILES = [
+  './',
+  './index.html',
+  './manifest.json',
+  './ausbildungs-icon-20260922.png'
+];
+
 self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(CACHE_FILES))
+  );
+
   self.skipWaiting();
 });
 
 self.addEventListener('activate', event => {
-  event.waitUntil((async () => {
-    try {
-      const keys = await caches.keys();
-      await Promise.all(keys.map(k => {
-        if (/vb|behoerden|behorden|post|pwa/i.test(k)) return caches.delete(k);
-        return Promise.resolve(false);
-      }));
-    } catch (_) {}
+  event.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(
+        keys
+          .filter(key => key !== CACHE_NAME)
+          .map(key => caches.delete(key))
+      )
+    )
+  );
 
-    try {
-      await self.registration.unregister();
-    } catch (_) {}
+  self.clients.claim();
+});
 
-    try {
-      const clients = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
-      for (const client of clients) {
-        try { client.navigate(client.url); } catch (_) {}
-      }
-    } catch (_) {}
-  })());
+self.addEventListener('fetch', event => {
+  if (event.request.method !== 'GET') {
+    return;
+  }
+
+  event.respondWith(
+    fetch(event.request)
+      .then(response => {
+        if (response && response.status === 200) {
+          const copy = response.clone();
+
+          caches.open(CACHE_NAME)
+            .then(cache => {
+              cache.put(event.request, copy);
+            });
+        }
+
+        return response;
+      })
+      .catch(() => {
+        return caches.match(event.request);
+      })
+  );
 });
