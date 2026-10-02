@@ -1,319 +1,629 @@
 <!DOCTYPE html>
 <html lang="de">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <meta name="theme-color" content="#25346f">
-  <meta name="application-name" content="Ausbildungsplanung">
-  <meta name="apple-mobile-web-app-title" content="Ausbildungsplanung">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta property="og:title" content="Ausbildungsplanung – Feuerwehr St. Pölten-Stadt">
-  <meta property="og:description" content="Interne Ausbildungsplanung der Feuerwehr St. Pölten-Stadt">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  >
 
-  <link rel="icon" type="image/png" sizes="512x512" href="./ausbildungs-icon-20260922.png?v=5">
-  <link rel="shortcut icon" type="image/png" href="./ausbildungs-icon-20260922.png?v=5">
-  <link rel="apple-touch-icon" sizes="180x180" href="./ausbildungs-icon-20260922.png?v=5">
-  <link rel="manifest" href="./manifest.json?v=3">
+  <meta
+    name="theme-color"
+    content="#25346f"
+  >
 
-  <title>Ausbildungsplaner – Feuerwehr St. Pölten-Stadt</title>
+  <meta
+    name="application-name"
+    content="Ausbildungsplanung"
+  >
+
+  <meta
+    name="apple-mobile-web-app-title"
+    content="Ausbildungsplanung"
+  >
+
+  <meta
+    name="apple-mobile-web-app-capable"
+    content="yes"
+  >
+
+  <meta
+    name="apple-mobile-web-app-status-bar-style"
+    content="default"
+  >
+
+  <meta
+    property="og:title"
+    content="Ausbildungsplanung – Feuerwehr St. Pölten-Stadt"
+  >
+
+  <meta
+    property="og:description"
+    content="Interne Ausbildungsplanung der Feuerwehr St. Pölten-Stadt"
+  >
+
+  <link
+    rel="icon"
+    type="image/png"
+    href="./ausbildungs-icon-20260922.png?v=6"
+  >
+
+  <link
+    rel="apple-touch-icon"
+    href="./ausbildungs-icon-20260922.png?v=6"
+  >
+
+  <link
+    rel="manifest"
+    href="./manifest.json?v=4"
+  >
+
+  <title>
+    Ausbildungsplaner – Feuerwehr St. Pölten-Stadt
+  </title>
 
   <style>
-    * { box-sizing: border-box; }
 
-    html, body {
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
       margin: 0;
+      padding: 0;
+
       width: 100%;
       height: 100%;
-      font-family: Arial, Helvetica, sans-serif;
-      background: #f3f5f9;
-      color: #192230;
+
       overflow: hidden;
+
+      background: #f3f5f9;
+
+      font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
     }
+
 
     #app {
       position: fixed;
+
       inset: 0;
+
+      width: 100%;
+      height: 100%;
+
       background: #f3f5f9;
     }
 
+
     #plannerFrame {
+      display: block;
+
       width: 100%;
       height: 100%;
+
       border: 0;
-      display: block;
+
       background: #f3f5f9;
     }
+
 
     #loading {
       position: fixed;
+
       inset: 0;
-      z-index: 50;
+
+      z-index: 1000;
+
       display: flex;
+
+      flex-direction: column;
+
       align-items: center;
       justify-content: center;
-      flex-direction: column;
+
       gap: 14px;
-      background: linear-gradient(135deg, #25346f, #34499a);
-      color: white;
+
+      background:
+        linear-gradient(
+          135deg,
+          #25346f,
+          #34499a
+        );
+
+      color: #ffffff;
+
+      font-size: 14px;
       font-weight: 800;
     }
 
+
     .spinner {
-      width: 38px;
-      height: 38px;
-      border: 4px solid rgba(255,255,255,.25);
-      border-top-color: white;
-      border-radius: 50%;
-      animation: spin .8s linear infinite;
+      width: 42px;
+      height: 42px;
+
+      border:
+        4px solid
+        rgba(
+          255,
+          255,
+          255,
+          0.25
+        );
+
+      border-top-color:
+        #ffffff;
+
+      border-radius:
+        50%;
+
+      animation:
+        spin
+        0.8s
+        linear
+        infinite;
     }
 
+
     @keyframes spin {
-      to { transform: rotate(360deg); }
+
+      to {
+        transform:
+          rotate(
+            360deg
+          );
+      }
+
     }
+
 
     #installOverlay {
       position: fixed;
+
       inset: 0;
-      z-index: 99999;
+
+      z-index: 9999;
+
       display: none;
+
       align-items: flex-end;
       justify-content: center;
+
       padding: 16px;
-      background: rgba(15,22,42,.72);
-      backdrop-filter: blur(7px);
-      -webkit-backdrop-filter: blur(7px);
+
+      background:
+        rgba(
+          15,
+          22,
+          42,
+          0.72
+        );
+
+      backdrop-filter:
+        blur(
+          7px
+        );
+
+      -webkit-backdrop-filter:
+        blur(
+          7px
+        );
     }
+
 
     #installOverlay.show {
       display: flex;
     }
 
+
     .install-card {
-      width: min(450px, 100%);
-      padding: 26px 21px;
-      margin-bottom: env(safe-area-inset-bottom);
-      border-radius: 25px;
-      background: #fff;
-      text-align: center;
-      box-shadow: 0 25px 80px rgba(0,0,0,.32);
+      width:
+        min(
+          450px,
+          100%
+        );
+
+      margin-bottom:
+        env(
+          safe-area-inset-bottom
+        );
+
+      padding:
+        26px 21px;
+
+      border-radius:
+        25px;
+
+      background:
+        #ffffff;
+
+      text-align:
+        center;
+
+      box-shadow:
+        0 25px 80px
+        rgba(
+          0,
+          0,
+          0,
+          0.32
+        );
     }
+
 
     .install-icon {
       width: 82px;
       height: 82px;
-      margin: 0 auto 14px;
+
+      margin:
+        0 auto 14px;
+
       display: flex;
+
       align-items: center;
       justify-content: center;
-      border-radius: 22px;
-      background: #fff;
-      border: 1px solid #e4e8f0;
-      box-shadow: 0 8px 22px rgba(38,54,111,.10);
+
+      border:
+        1px solid
+        #e4e8f0;
+
+      border-radius:
+        22px;
+
+      background:
+        #ffffff;
     }
+
 
     .install-icon img {
       width: 72px;
       height: 72px;
-      object-fit: contain;
-      border-radius: 18px;
+
+      object-fit:
+        contain;
+
+      border-radius:
+        18px;
     }
+
 
     .install-brand {
-      color: #34499a;
-      font-size: 9px;
-      font-weight: 900;
-      letter-spacing: .08em;
+      color:
+        #34499a;
+
+      font-size:
+        10px;
+
+      font-weight:
+        900;
+
+      letter-spacing:
+        0.08em;
     }
+
 
     .install-card h2 {
-      margin: 7px 0 8px;
-      color: #25346f;
-      font-size: 23px;
-      font-weight: 900;
+      margin:
+        8px 0;
+
+      color:
+        #25346f;
+
+      font-size:
+        23px;
     }
+
 
     .install-card p {
-      margin: 8px 0 0;
-      color: #718096;
-      font-size: 13px;
-      line-height: 1.5;
+      color:
+        #718096;
+
+      font-size:
+        13px;
+
+      line-height:
+        1.5;
     }
+
 
     .install-button {
-      width: 100%;
-      min-height: 54px;
-      margin-top: 20px;
-      border: 0;
-      border-radius: 14px;
-      background: linear-gradient(135deg,#25346f,#34499a);
-      color: #fff;
-      font-size: 14px;
-      font-weight: 900;
-      cursor: pointer;
+      width:
+        100%;
+
+      min-height:
+        52px;
+
+      margin-top:
+        18px;
+
+      border:
+        0;
+
+      border-radius:
+        14px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #25346f,
+          #34499a
+        );
+
+      color:
+        #ffffff;
+
+      font-weight:
+        900;
+
+      cursor:
+        pointer;
     }
+
 
     .install-later {
-      width: 100%;
-      min-height: 48px;
-      margin-top: 9px;
-      border: 0;
-      border-radius: 14px;
-      background: #edf0f5;
-      color: #354052;
-      font-size: 12px;
-      font-weight: 900;
-      cursor: pointer;
+      width:
+        100%;
+
+      min-height:
+        46px;
+
+      margin-top:
+        8px;
+
+      border:
+        0;
+
+      border-radius:
+        14px;
+
+      background:
+        #edf0f5;
+
+      color:
+        #354052;
+
+      font-weight:
+        800;
+
+      cursor:
+        pointer;
     }
+
 
     #iosHelp {
-      display: none;
-      margin-top: 16px;
-      padding: 17px;
-      border-radius: 15px;
-      background: #eef1fb;
-      color: #25346f;
-      font-size: 13px;
-      line-height: 1.5;
+      display:
+        none;
+
+      margin-top:
+        15px;
+
+      padding:
+        15px;
+
+      border-radius:
+        14px;
+
+      background:
+        #eef1fb;
+
+      color:
+        #25346f;
+
+      font-size:
+        13px;
+
+      line-height:
+        1.55;
     }
 
-    .browser-help {
-      margin-top: 15px;
-      padding: 15px;
-      border-radius: 15px;
-      background: #eef1fb;
-      color: #25346f;
-      font-size: 12px;
-      line-height: 1.6;
-    }
   </style>
+
 </head>
+
 
 <body>
 
+
   <div id="app">
-    <iframe id="plannerFrame" allowfullscreen></iframe>
+
+    <iframe
+      id="plannerFrame"
+      allowfullscreen
+    ></iframe>
+
   </div>
+
 
   <div id="loading">
+
     <div class="spinner"></div>
-    <div>Ausbildungsplaner wird geladen …</div>
+
+    <div>
+      Ausbildungsplaner wird geladen …
+    </div>
+
   </div>
 
+
   <div id="installOverlay">
+
     <div class="install-card">
 
       <div class="install-icon">
+
         <img
-          src="./ausbildungs-icon-20260922.png?v=5"
-          alt="Ausbildungsplaner">
+          src="./ausbildungs-icon-20260922.png?v=6"
+          alt="Ausbildungsplaner"
+        >
+
       </div>
+
 
       <div class="install-brand">
         FEUERWEHR ST. PÖLTEN-STADT
       </div>
 
-      <h2>Ausbildungsplaner installieren</h2>
+
+      <h2>
+        Ausbildungsplaner installieren
+      </h2>
+
 
       <p id="installText">
+
         Der Ausbildungsplaner kann als App auf diesem Gerät installiert werden.
+
       </p>
 
+
       <div id="iosHelp">
-        <strong>iPhone / iPad</strong>
+
+        <strong>
+          iPhone / iPad
+        </strong>
+
         <br><br>
+
         Tippe in Safari auf
+
         <br><br>
-        <strong>Teilen ⬆️</strong>
+
+        <strong>
+          Teilen ⬆️
+        </strong>
+
         <br><br>
+
         und anschließend auf
+
         <br>
-        <strong>„Zum Home-Bildschirm“</strong>
+
+        <strong>
+          „Zum Home-Bildschirm“
+        </strong>
+
       </div>
+
 
       <button
         id="installButton"
         class="install-button"
         type="button"
-        style="display:none;">
+        style="display:none"
+      >
+
         📲 App installieren
+
       </button>
+
 
       <button
         id="installLater"
         class="install-later"
-        type="button">
+        type="button"
+      >
+
         Jetzt nicht
+
       </button>
 
     </div>
+
   </div>
 
+
   <script>
+
     const PLANNER_URL =
       'https://script.google.com/macros/s/AKfycbyAbgkQBR514pZ1kXxEnNyCpWKHM2opbnV4Y0-MPJjr4eYW6mAWY9H0SSIGUpj0FXukXg/exec?view=planner';
 
+
     function openPlanner() {
 
-      const loading =
-        document.getElementById('loading');
-
       const frame =
-        document.getElementById('plannerFrame');
+        document.getElementById(
+          'plannerFrame'
+        );
 
-      frame.onload = () => {
-        loading.style.display = 'none';
-      };
 
-      const separator =
-        PLANNER_URL.includes('?')
-          ? '&'
-          : '?';
+      const loading =
+        document.getElementById(
+          'loading'
+        );
+
+
+      frame.onload =
+        function() {
+
+          loading.style.display =
+            'none';
+
+        };
+
 
       frame.src =
         PLANNER_URL +
-        separator +
-        't=' +
+        '&v=' +
         Date.now();
+
     }
+
 
     document.addEventListener(
       'DOMContentLoaded',
       openPlanner
     );
+
   </script>
 
-  <script>
-    let deferredInstallPrompt = null;
 
-    const installParams =
+  <script>
+
+    let deferredInstallPrompt =
+      null;
+
+
+    const params =
       new URLSearchParams(
         window.location.search
       );
 
+
     const installRequested =
-      installParams.get('install') === '1';
+      params.get(
+        'install'
+      ) ===
+      '1';
+
 
     const installOverlay =
       document.getElementById(
         'installOverlay'
       );
 
+
     const installButton =
       document.getElementById(
         'installButton'
       );
+
 
     const installLater =
       document.getElementById(
         'installLater'
       );
 
+
     const installText =
       document.getElementById(
         'installText'
       );
+
 
     const iosHelp =
       document.getElementById(
@@ -321,17 +631,21 @@
       );
 
 
-    function isPwaInstalled() {
+    function isInstalled() {
 
       return (
+
         window
           .matchMedia(
             '(display-mode: standalone)'
           )
           .matches ||
 
-        window.navigator.standalone === true
+        window.navigator.standalone ===
+          true
+
       );
+
     }
 
 
@@ -342,13 +656,20 @@
           window.location.href
         );
 
-      url.searchParams.delete(
-        'install'
-      );
 
-      url.searchParams.delete(
-        'source'
-      );
+      url
+        .searchParams
+        .delete(
+          'install'
+        );
+
+
+      url
+        .searchParams
+        .delete(
+          'source'
+        );
+
 
       history.replaceState(
         {},
@@ -357,33 +678,7 @@
         url.search +
         url.hash
       );
-    }
 
-
-    function showAndroidInstall() {
-
-      if (
-        isPwaInstalled()
-      ) {
-
-        cleanInstallUrl();
-        return;
-      }
-
-      iosHelp.style.display =
-        'none';
-
-      installButton.style.display =
-        'block';
-
-      installText.innerHTML =
-        'Der Ausbildungsplaner kann als App auf diesem Gerät installiert werden.';
-
-      installOverlay
-        .classList
-        .add(
-          'show'
-        );
     }
 
 
@@ -392,90 +687,92 @@
       installButton.style.display =
         'none';
 
+
       iosHelp.style.display =
         'block';
 
-      installText.innerHTML =
+
+      installText.textContent =
         'Installiere den Ausbildungsplaner auf deinem Home-Bildschirm.';
+
 
       installOverlay
         .classList
         .add(
           'show'
         );
+
     }
 
 
-    function showBrowserFallback() {
-
-      installButton.style.display =
-        'none';
+    function showAndroidInstall() {
 
       iosHelp.style.display =
         'none';
 
-      installText.innerHTML = `
-        <b>Ausbildungsplaner wurde geöffnet.</b>
 
-        <div class="browser-help">
-          Falls dein Browser keinen Installationsdialog anzeigt:
-          <br><br>
-          <b>☰ Browser-Menü</b>
-          <br>
-          → <b>Seite hinzufügen zu</b>
-          <br>
-          → <b>Startbildschirm</b>
-        </div>
-      `;
+      installButton.style.display =
+        'block';
+
 
       installOverlay
         .classList
         .add(
           'show'
         );
+
     }
 
 
     window.addEventListener(
       'beforeinstallprompt',
+
       function(event) {
 
         event.preventDefault();
 
+
         deferredInstallPrompt =
           event;
 
+
         if (
           installRequested &&
-          !isPwaInstalled()
+          !isInstalled()
         ) {
 
           showAndroidInstall();
+
         }
+
       }
     );
 
 
     installButton.addEventListener(
       'click',
+
       async function() {
 
         if (
           !deferredInstallPrompt
         ) {
 
-          showBrowserFallback();
           return;
+
         }
 
-        deferredInstallPrompt
-          .prompt();
+
+        deferredInstallPrompt.prompt();
+
 
         await deferredInstallPrompt
           .userChoice;
 
+
         deferredInstallPrompt =
           null;
+
 
         installOverlay
           .classList
@@ -483,13 +780,16 @@
             'show'
           );
 
+
         cleanInstallUrl();
+
       }
     );
 
 
     installLater.addEventListener(
       'click',
+
       function() {
 
         installOverlay
@@ -498,55 +798,38 @@
             'show'
           );
 
-        cleanInstallUrl();
-      }
-    );
-
-
-    window.addEventListener(
-      'appinstalled',
-      function() {
-
-        deferredInstallPrompt =
-          null;
-
-        installOverlay
-          .classList
-          .remove(
-            'show'
-          );
 
         cleanInstallUrl();
+
       }
     );
 
 
     window.addEventListener(
       'load',
+
       function() {
 
         if (
-          !installRequested
-        ) {
-          return;
-        }
-
-        if (
-          isPwaInstalled()
+          !installRequested ||
+          isInstalled()
         ) {
 
-          cleanInstallUrl();
           return;
+
         }
+
 
         const ua =
           navigator.userAgent;
+
 
         const ios =
           /iPhone|iPad|iPod/i
             .test(
               ua
             ) ||
+
           (
             navigator.platform ===
               'MacIntel' &&
@@ -555,35 +838,18 @@
               1
           );
 
+
         if (
           ios
         ) {
 
           setTimeout(
             showIosInstall,
-            600
+            500
           );
 
-          return;
         }
 
-        setTimeout(
-          function() {
-
-            if (
-              deferredInstallPrompt
-            ) {
-
-              showAndroidInstall();
-
-            } else {
-
-              showBrowserFallback();
-            }
-
-          },
-          5000
-        );
       }
     );
 
@@ -595,6 +861,7 @@
 
       window.addEventListener(
         'load',
+
         function() {
 
           navigator
@@ -609,12 +876,18 @@
                   'Service Worker Fehler:',
                   error
                 );
+
               }
             );
+
         }
       );
+
     }
+
   </script>
 
+
 </body>
+
 </html>
